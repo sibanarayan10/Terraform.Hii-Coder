@@ -1,12 +1,10 @@
-terraform{
+terraform {
+  required_version = ">= 1.16.0"
 
-required_provider{
-  aws={
-   source="hashicorp"
-   version="5.xxx"
-   }
-
-}
-required_version="10.0.0"
-
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
 }

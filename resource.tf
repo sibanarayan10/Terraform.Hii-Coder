@@ -1,25 +1,29 @@
 resource "aws_instance" "core-service"{
    ami=data.aws_ami.ubuntu.id
-   instance_type=var.instance_type
-   profile="production"
+   instance_type=var.aws_instance_type
    tags={
      Name="core-service"
      Enviroment=var.aws_enviroment
    }
    subnet_id=aws_subnet.app_subnet.id
-   associate_public_ip_address=true   
+   associate_public_ip_address=true 
+   vpc_security_group_ids = [
+      aws_security_group.core_service.id
+    ]  
 
 }
 resource "aws_instance" "submission-service"{
    ami=data.aws_ami.ubuntu.id
-   profile="production"
-   instance_type=var.instance_type
+   instance_type=var.aws_instance_type
    tags={
      Name="submission-service"
      Enviroment=var.aws_enviroment
    }
    subnet_id=aws_subnet.app_subnet.id
    associate_public_ip_address=true 
+   vpc_security_group_ids = [
+    aws_security_group.core_service.id
+  ]
 }
 
 resource "aws_vpc" "app_vpc"{
@@ -61,7 +65,7 @@ resource "aws_route_table" "public" {
   }
 }
 resource "aws_route_table_association" "public" {
-  subnet_id      = aws_subnet.public.id
+  subnet_id      = aws_subnet.app_subnet.id
   route_table_id = aws_route_table.public.id
 }
 
